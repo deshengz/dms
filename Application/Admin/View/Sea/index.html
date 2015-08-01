@@ -1,0 +1,72 @@
+<extend name="Public/base"/>
+
+<block name="body">
+	<div class="main-title">
+		<h2>海域管理</h2>
+	</div>
+
+	<div class="cf">
+		<a class="btn" href="{:U('add')}">新 增</a>
+	</div>
+
+	<div class="data-table table-striped">
+		<table>
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>海域名称</th>
+                    <th>排序</th>
+                    <th>状态</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<notempty name="list">
+				<volist name="list" id="sea">
+					<tr>
+						<td>{$sea.id}</td>
+						<td>{$sea.sea}</a></td>
+                        <td>{$sea.sort}</td>
+                        <td><eq name="sea.status" value="0">
+                            禁用
+                            <else/>
+                            启用
+                        </eq></td>
+						<td>
+							<a title="编辑" href="{:U('edit?sid='.$sea['id'])}">编辑</a>
+							<a href="{:U('setStatus?ids='.$sea['id'].'&status='.abs(1-$sea['status']))}" class="ajax-get">{$sea.status|show_status_op}</a>
+							<a class="confirm ajax-get" title="删除" href="{:U('del?id='.$sea['id'])}">删除</a>
+						</td>
+					</tr>
+				</volist>
+				<else/>
+				<td colspan="6" class="text-center"> aOh! 暂时还没有内容! </td>
+				</notempty>
+			</tbody>
+		</table>
+	</div>
+</block>
+
+<block name="script">
+<script type="text/javascript">
+    $(function() {
+    	//点击排序
+    	$('.list_sort').click(function(){
+    		var url = $(this).attr('url');
+    		var ids = $('.ids:checked');
+    		var param = '';
+    		if(ids.length > 0){
+    			var str = new Array();
+    			ids.each(function(){
+    				str.push($(this).val());
+    			});
+    			param = str.join(',');
+    		}
+
+    		if(url != undefined && url != ''){
+    			window.location.href = url + '/ids/' + param;
+    		}
+    	});
+    });
+</script>
+</block>

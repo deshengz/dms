@@ -1016,3 +1016,45 @@ function check_category_model($info){
     $array  =   explode(',', $info['pid'] ? $cate['model_sub'] : $cate['model']);
     return in_array($info['model_id'], $array);
 }
+
+/**
+ * 度分秒转换成decimal格式
+ * @param  array $dufenmiao 度分秒的数组
+ * @return decimal $decimal 双精度
+ */
+
+function dufenmiaoTodecimal($dufenmiao){
+    $decimal= $dufenmiao[0]+($dufenmiao[1]/60+$dufenmiao[2]/3600);
+    return round($decimal,7);
+}
+/**
+ * decimal转换成度分秒
+ * @param  decimal $decimal 双精度
+ * @return  array $dufenmiao 模型ID和分类ID数组
+ */
+
+function decimalTodufenmiao($decimal){
+    $temp=explode('.',$decimal);
+    $dufenmiao[0]=$temp[0];
+    $temp1=explode('.',('0.'.$temp[1])*60);
+    $dufenmiao[1]= $temp1[0];
+    $temp2=explode('.',('0.'.$temp1[1])*60);
+    $dufenmiao[2]= $temp2[0];
+    return $dufenmiao;
+}
+/**
+ * decimal转换成度分秒,生成字符串
+ * @param  decimal $decimal 双精度
+ * @return  char $info 模型ID和分类ID数组
+ */
+
+function dufenmiaochar($decimal){
+    $temp=explode('.',$decimal);
+    $dufenmiao[0]=$temp[0];
+    $temp1=explode('.',('0.'.$temp[1])*60);
+    $dufenmiao[1]= $temp1[0];
+    $temp2=explode('.',('0.'.$temp1[1])*60);
+    $dufenmiao[2]= $temp2[0];
+    $info=$dufenmiao[0].'°'.$dufenmiao[1].'‘'.$dufenmiao[2].'“';
+    return $info;
+}

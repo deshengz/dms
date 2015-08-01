@@ -1,0 +1,93 @@
+<extend name="Public/base"/>
+
+<block name="body">
+	<div class="main-title">
+		<h2>地图管理</h2>
+	</div>
+
+	<div class="cf">
+
+        <form action="{:U()}" method="get" class="form-inline">
+            <a class="btn" href="{:U('add')}">新 增</a>
+        <input class="text input-large" name="map" id="map" placeholder="地图名称" value="{$search.map}" />
+            <input class="text input-small" name="msn" id="msn" placeholder="地图编码" value="{$search.msn}"  />
+            <label for="sea_id">海域</label>
+            <select name="sea_id" id="sea_id">
+                <option value="">请选择</option>
+                <volist name="seas" id="sea">
+                    <option value="{$sea.id}" <eq name="sea.id" value="$search['sea_id']" >selected</eq>>{$sea.sea}</option>
+                </volist>
+            </select>
+            <button class="btn" type="submit">查找</button>
+        </form>
+	</div>
+
+	<div class="data-table table-striped">
+		<table>
+			<thead>
+				<tr>
+
+					<th>SN</th>
+					<th>地图名称</th>
+					<th>海域</th>
+                    <th>经度范围</th>
+					<th>纬度范围</th>
+                    <th>比例尺</th>
+                    <th>库存/总计</th>
+                    <th>中/英</th>
+                    <th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<notempty name="list">
+				<volist name="list" id="map">
+					<tr>
+						<td>{$map.msn}</td>
+						<td><a href="{:U('index?pid='.$channel['id'])}">{$map.map}</a></td>
+						<td>{$map.sid}</td>
+                        <td>{:dufenmiaochar($map['longitude1'])}<br>{:dufenmiaochar($map['longitude2'])}</td>
+                        <td>{:dufenmiaochar($map['latitude1'])}<br>{:dufenmiaochar($map['latitude2'])}</td>
+                        <td>1:{$map.scale}</td>
+                        <td>{$map.inventory}/{$map.total}</td>
+                        <td>{$map.language}</td>
+						<td>
+							<a title="编辑" href="{:U('edit?id='.$map['id'])}">编辑</a>
+							<a class="confirm ajax-get" title="删除" href="{:U('del?id='.$map['id'])}">删除</a>
+
+						</td>
+					</tr>
+				</volist>
+				<else/>
+				<td colspan="6" class="text-center"> aOh! 暂时还没有内容! </td>
+				</notempty>
+			</tbody>
+		</table>
+	</div>
+    <div>
+        {$_page}
+    </div>
+</block>
+
+<block name="script">
+<script type="text/javascript">
+    $(function() {
+    	//点击排序
+    	$('.list_sort').click(function(){
+    		var url = $(this).attr('url');
+    		var ids = $('.ids:checked');
+    		var param = '';
+    		if(ids.length > 0){
+    			var str = new Array();
+    			ids.each(function(){
+    				str.push($(this).val());
+    			});
+    			param = str.join(',');
+    		}
+
+    		if(url != undefined && url != ''){
+    			window.location.href = url + '/ids/' + param;
+    		}
+    	});
+    });
+</script>
+</block>

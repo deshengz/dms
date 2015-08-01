@@ -1,0 +1,12 @@
+
+.idea/scopes/scope_settings.xml
+
+*.xml
+
+*.php
+
+*.log
+
+*.iml
+
+.idea/.name

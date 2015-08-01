@@ -1,0 +1,140 @@
+<extend name="Public/base"/>
+
+<block name="body">
+	<div class="main-title">
+		<h2>
+			{$map['id']?'编辑':'新增'}海图
+		</h2>
+	</div>
+
+	<form action="{:U()}" method="post" class="form-horizontal" enctype=”multipart/form-data”>
+		<input type="hidden" name="mid" value="{$mid}">
+		<div class="form-item">
+			<label class="item-label">地图名称<span class="check-tips">（用于显示的文字）</span></label>
+			<div class="controls">
+				<input type="text" class="text input-large required" name="map" value="{$map.map|default=''}" placeholder="请输入海图名"  aria-required="true" aria-invalid="true">
+			</div>
+		</div>
+		<div class="form-item">
+			<label class="item-label">地图sn<span class="check-tips">海图编码不能重复</span></label>
+			<div class="controls">
+				<input type="text" class="text input-large" name="msn" value="{$map.msn|default=''}">
+			</div>
+		</div>
+        <div class="form-item">
+            <label class="item-label">海域</label>
+            <div class="controls">
+                <select name="sea_id">
+                    <option value="">请选择</option>
+                    <volist name="seas" id="sea">
+                    <option value="{$sea.id}" <eq name="sea.id" value="$map['sea_id']" >selected</eq>>{$sea.sea}</option>
+                    </volist>
+                </select>
+            </div>
+        </div>
+        <div class="form-item">
+            <label class="item-label">经度范围<span class="check-tips"></span></label>
+            <div class="controls">
+                <input type="text" class="text" name="long1[]" style="width: 30px" value="{$map['long1']['0']|default='0'}">
+                度
+                <input type="text" class="text" name="long1[]" style="width: 30px" value="{$map['long1']['1']|default='0'}">
+                分
+                <input type="text" class="text" name="long1[]" style="width: 30px" value="{$map['long1']['2']|default='0'}">
+                秒－至－
+                <input type="text" class="text" name="long2[]" style="width: 30px" value="{$map['long2']['0']|default='0'}">
+                度
+                <input type="text" class="text" name="long2[]" style="width: 30px" value="{$map['long2']['1']|default='0'}">
+                分
+                <input type="text" class="text" name="long2[]" style="width: 30px" value="{$map['long2']['2']|default='0'}">
+                秒
+            </div>
+        </div>
+        <div class="form-item">
+            <label class="item-label">纬度范围<span class="check-tips"></span></label>
+            <div class="controls">
+                <input type="text" class="text" name="lati1[]" style="width: 30px" value="{$map['lati1']['0']|default='0'}">
+                度
+                <input type="text" class="text" name="lati1[]" style="width: 30px" value="{$map['lati1']['1']|default='0'}">
+                分
+                <input type="text" class="text" name="lati1[]" style="width: 30px" value="{$map['lati1']['2']|default='0'}">
+                秒－至－
+                <input type="text" class="text" name="lati2[]" style="width: 30px" value="{$map['lati2']['0']|default='0'}">
+                度
+                <input type="text" class="text" name="lati2[]" style="width: 30px" value="{$map['lati2']['1']|default='0'}">
+                分
+                <input type="text" class="text" name="lati2[]" style="width: 30px" value="{$map['lati2']['2']|default='0'}">
+                秒
+            </div>
+        </div>
+        <div class="form-item">
+            <label class="item-label">比例尺<span class="check-tips"></span></label>
+            <div class="controls">
+                1:
+                <input type="text" class="text input-small" name="scale" value="{$map.scale|default='0'}">
+            </div>
+        </div>
+        <div class="form-item">
+            <label class="item-label">库存<span class="check-tips"></span></label>
+            <div class="controls">
+                <input type="text" class="text input-small" name="inventory" value="{$map.inventory|default='0'}">
+            </div>
+        </div>
+        <div class="form-item">
+            <label class="item-label">中/英文</label>
+            <div class="controls">
+                <select name="status">
+                    <option value="chinese" <eq name="map.language" value="chinese" >selected</eq>>中文</option>
+                    <option value="english" <eq name="map.language" value="english" >selected</eq>>英文</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-item">
+            <label class="item-label">状态</label>
+            <div class="controls">
+                <select name="status">
+				<option value="1" <eq name="map.status" value="1" >selected</eq>>启用</option>
+				<option value="0" <eq name="map.status" value="0" >selected</eq>>停用</option>
+                </select>
+            </div>
+        </div>
+        <div class="thumb_image">
+
+
+                <img src="/Uploads/Picture/thumb_{$map.image|default='default.jpg'}" width="263" height="197" class="img_thumb"/>
+
+            <div> <input id="file_upload" name="file_upload" type="file" multiple="true" value="" /><span>图片规格：600*450</span></div>
+            <input type="hidden" name="image" value="" id="image"/>
+
+        </div>
+		<div class="form-item">
+			<input type="hidden" name="id" value="{$map.id|default=''}">
+			<button class="btn submit-btn" id="submit" type="submit" target-form="form-horizontal">确 定</button>
+			<button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+		</div>
+	</form>
+</block>
+<block name="script">
+<script type="text/javascript" charset="utf-8">
+	//导航高亮
+	highlight_subnav('{:U('index')}');
+    $('form').validate();
+
+    //判断sn
+</script>
+    <script>
+        var img = '';
+        $('#file_upload').uploadify({
+            'swf'      : '__STATIC__/uploadify/uploadify.swf',
+            'uploader' : '{:U("Map/upload",array("session_id"=>session_id()))}',   //上传的方法
+            'buttonText' : ' 图片上传',
+            'formData': { 'session': '<?php echo session_id();?>'},
+            'onUploadSuccess' : function(file, data, response) {
+                //把所有上传的图片都放入DIV中
+                alert(data);
+                $(".img_thumb").attr("src","/Uploads/Picture/"+data);
+                $("#image").val(data);
+            }
+        });
+    </script>
+</block>
