@@ -1,0 +1,30 @@
+<extend name="Base/common" />
+
+<block name="body">
+<div class="container">
+			<div class="main">
+				<img src="__IMG__/logo.png" />
+				<p>海军院校实习图库管理系统</p>
+				<div class="search">
+					<form action="{:U('Search/index')}">
+						<select name="search_cate">
+							<option value="all">全部</option>
+							<option value="map">海图</option>
+							<option value="book">航海图书</option>
+							<option value="equipment">航海器械</option>
+						</select>
+						<input type="text" name="keyword"/>
+						<input type="submit" class="form_button" value="搜索"/>
+					</form>
+				</div>
+				<div class="cate"><a href="{:U('Search/index',array('search_cate'=>'map'))}">海图</a><a style="margin:0px 40px" href="{:U('Search/index',array('search_cate'=>book))}">航海图书</a><a href="{:U('Search/index',array('search_cate'=>equipment))}">航海器械</a></div>
+			</div>
+		</div>
+			<script type="text/javascript">
+    $(function(){
+        $(window).resize(function(){
+            $("。container").css("height", $(window).height() - 40);
+        }).resize();
+    })
+</script>
+</block>
