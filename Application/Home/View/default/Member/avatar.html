@@ -1,0 +1,128 @@
+<extend name="Base/member_common" />
+<block name="main">
+<script type="text/javascript" src="__JS__/jquery.Jcrop/jquery.Jcrop.js"></script>
+<link href="__JS__/jquery.Jcrop/jquery.Jcrop.min.css" rel="stylesheet" type="text/css" id="cssfile2" />
+<div class="wrap">
+  <div class="tabmenu">
+    <ul class="tab pngFix">
+	  <li  <eq name="sign" value="1"> class="active"<else/>class="normal"</eq>><a href="{:U('Member/index',array('sign'=>1))}">基本信息</a></li>
+	  <li  <eq name="sign" value="2"> class="active"<else/>class="normal"</eq>><a href="{:U('Member/passwdEdit',array('sign'=>2))}">修改密码</a></li>
+	  <li  <eq name="sign" value="3"> class="active"<else/>class="normal"</eq>><a href="{:U('Member/avatar',array('sign'=>3))}">更换头像</a></li>
+  	</ul>
+  </div>
+  <eq name="newfile" value="">
+  <form action="{:U('Member/avatar')}" enctype="multipart/form-data" id="form_avaster" method="post">
+    <input type="hidden" name="form_submit" value="ok" />
+    <div class="ncu-form-style">
+      <dl>
+        <dt>头像预览：</dt>
+        <dd>
+          <div class="member-avatar-thumb"><img  <eq name="member['avatar']" value=""> src="__IMG__/default_avatar.png"<else/>src="__UPLOADS__/{$member['avatar']}"</eq> alt="" nc_type="avatar" /></div>
+          <p class="hint mt5"><span style="color:orange;">头像默认尺寸为120x120像素，请根据系统操作提示进行裁剪并生效。</span></p>
+        </dd>
+      </dl>
+      <dl>
+        <dt>更新头像：</dt>
+        <dd>
+          <div class="upload-btn"> <a href="javascript:void(0);"> <span>
+            <input type="file" name="pic" id="pic" multiple=""  file_id="0" class="file" size="1" hidefocus="true" maxlength="0" />
+            </span>
+            <div class="upload-button">图片上传</div>
+            <input id="submit_button" style="display:none" type="button" value="&nbsp;" onClick="submit_form($(this))" />
+            </a></div>
+        </dd>
+      </dl>
+    </div>
+  </form>
+  <else/>
+  <form action="{:U('Member/cut')}" id="form_cut" method="post">
+    <input type="hidden" name="form_submit" value="ok" />
+    <input type="hidden" id="x1" name="x1" />
+    <input type="hidden" id="x2" name="x2" />
+    <input type="hidden" id="w" name="w" />
+    <input type="hidden" id="y1" name="y1" />
+    <input type="hidden" id="y2" name="y2" />
+    <input type="hidden" id="h" name="h" />
+    <input type="hidden" id="newfile" name="newfile" value="{$newfile}" />
+    <div class="pic-cut-120">
+      <div class="work-title">工作区域</div>
+      <div class="work-layer">
+        <p><img id="nccropbox" src="__UPLOADS__/{$newfile}"/></p>
+      </div>
+      <div class="thumb-title">裁切预览</div>
+      <div class="thumb-layer">
+        <p><img id="preview" style="max-width:500px !important" src="__UPLOADS__/{$newfile}?<?php echo microtime();?>"/></p>
+      </div>
+      <div class="cut-help">
+        <h4>操作帮助</h4>
+        <p>请在工作区域放大缩小及移动选取框，选择要裁剪的范围，裁切宽高比例固定；裁切后的效果为右侧预览图所显示；保存提交后生效。</p>
+      </div>
+      <div class="cut-btn">
+        <input type="button" id="ncsubmit" class="submit" value="提交" />
+      </div>
+    </div>
+  </form>
+  </eq>
+</div>
+
+<script type="text/javascript">
+$(function(){
+<?php if ($newfile != ''){?>
+	function showPreview(coords)
+	{
+		if (parseInt(coords.w) > 0){
+			var rx = 120 / coords.w;
+			var ry = 120 / coords.h;
+			$('#preview').css({
+				width: Math.round(rx * <?php echo $width;?>) + 'px',
+				height: Math.round(ry * <?php echo $height;?>) + 'px',
+				marginLeft: '-' + Math.round(rx * coords.x) + 'px',
+				marginTop: '-' + Math.round(ry * coords.y) + 'px'
+			});
+		}
+		$('#x1').val(coords.x);
+		$('#y1').val(coords.y);
+		$('#x2').val(coords.x2);
+		$('#y2').val(coords.y2);
+		$('#w').val(coords.w);
+		$('#h').val(coords.h);
+	}
+    $('#nccropbox').Jcrop({
+	aspectRatio:1,
+	setSelect: [ 0, 0, 120, 120 ],
+	minSize:[50, 50],
+	allowSelect:0,
+	onChange: showPreview,
+	onSelect: showPreview
+    });
+	$('#ncsubmit').click(function() {
+		var x1 = $('#x1').val();
+		var y1 = $('#y1').val();
+		var x2 = $('#x2').val();
+		var y2 = $('#y2').val();
+		var w = $('#w').val();
+		var h = $('#h').val();
+		if(x1=="" || y1=="" || x2=="" || y2=="" || w=="" || h==""){
+			alert("You must make a selection first");
+			return false;
+		}else{
+			$('#form_cut').submit();
+		}
+	});
+<?php }else{?>
+	$('#pic').change(function(){
+		var filepatd=$(this).val();
+		var extStart=filepatd.lastIndexOf(".");
+		var ext=filepatd.substring(extStart,filepatd.lengtd).toUpperCase();		
+		if(ext!=".PNG"&&ext!=".GIF"&&ext!=".JPG"&&ext!=".JPEG"){
+			alert("file type error");
+			$(this).attr('value','');
+			return false;
+		}
+		if ($(this).val() == '') return false;
+		$("#form_avaster").submit(); 
+	});
+<?php }?>
+});	
+</script>
+</block>

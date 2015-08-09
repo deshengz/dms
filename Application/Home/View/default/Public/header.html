@@ -1,47 +1,45 @@
 <!-- 导航条
 ================================================== -->
-<div class="navbar navbar-inverse navbar-fixed-top">
-    <div class="navbar-inner">
-        <div class="container">
-            <a class="brand" href="{:U('index/index')}">OneDream</a>
-            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <div class="nav-collapse collapse">
-                <ul class="nav">
-                    <think:nav name="nav">
-                    	<eq name="nav.pid" value="0">
-                        <li>
-                            <a href="{$nav.url|get_nav_url}" target="<eq name='nav.target' value='1'>_blank<else/>_self</eq>">{$nav.title}</a>
-                        </li>
-                        </eq>
-                    </think:nav>
-                </ul>
-            </div>
-            <div class="nav-collapse collapse pull-right">
-                <if condition="is_login()">
-                    <ul class="nav" style="margin-right:0">
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding-left:0;padding-right:0">{:get_username()} <b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="{:U('User/profile')}">修改密码</a></li>
-                                <li><a href="{:U('User/logout')}">退出</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                <else/>
-                    <ul class="nav" style="margin-right:0">
-                        <li>
-                            <a href="{:U('User/login')}">登录</a>
-                        </li>
-                        <li>
-                            <a href="{:U('User/register')}" style="padding-left:0;padding-right:0">注册</a>
-                        </li>
-                    </ul>
-                </if>
-            </div>
-        </div>
-    </div>
+<div class="header">
+	<div class="nav">
+		<if condition="is_login()">
+			<ul class="nav" style="margin-right:0">
+				<li style="min-width: 35px;">
+					<a href="{:U('User/logout')}"  style="padding-left:0;padding-right:0;  margin-left: 7px;" class="login_out">退出</a>
+				</li>
+				<li style="min-width: 35px;position:relative">
+				<div class="addcart-goods-num">{$cart_count?$cart_count:0}</div>
+					<a href="{:U('Cart/cart_index')}"  style="padding-left:0;padding-right:0"><span class="ico" style="  background-position: -120px 0;
+    margin-top: -5px;  margin-right: 7px;"></span>申领车</a>
+				</li>
+				<li style="min-width: 100px;">
+                    <a href="{:U('Cart/cart_index')}"  style="padding-left:0;padding-right:0"><span class="ico" style="  background-position: -100px 0;
+   margin-top: -6px;"></span>个人中心</a>                    
+                </li>
+                <li>
+                    <a href="#"  style="padding-left:0;padding-right:0">您好：<em>{:get_username()}</em> <b class="caret"></b></a>                    
+                </li> 
+            </ul>
+		<else/>
+			<ul>
+				<li style="width: 50px;"><a href="{:U('User/register')}">注册</a></li>
+				<li style="width: 50px;"><a href="{:U('User/login')}">登录</a></li>
+			</ul>
+		</if>
+	</div>
 </div>
+<script>
+	$('.login_out').click(function(){
+		var self = $(this);
+		$.get(self.attr("href"), '', success, "json");
+		return false;
+
+		function success(data){
+			if(data){
+				showDialog("退出成功", 'succ','','location.reload()','','','','','',2);
+			} else {
+				showDialog(data.info, 'error');
+			}
+		}
+	});
+</script>

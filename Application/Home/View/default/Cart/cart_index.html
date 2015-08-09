@@ -1,0 +1,122 @@
+<extend name="Base/member_common" />
+
+<block name="main">
+<style>
+.ncc-table-style tbody tr.item_disabled td {
+	background: none repeat scroll 0 0 #F9F9F9;
+	height: 30px;
+	padding: 10px 0;
+	text-align: center;
+}
+</style>
+<link href="__CSS__/home_cart.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="__JS__/jquery-ui/themes/ui-lightness/jquery.ui.css">
+<script type="text/javascript" src="__JS__/goods_cart.js"></script>
+
+<div class="ncc-main">
+  <div class="ncc-title">
+    <h3>我的申领车</h3>
+    <h5>查看申领车清单，增加减少申请数量，并勾选想要的申请进入下一步操作。</h5>
+  </div>
+  <form action="{:U('Apply/addApply')}" method="POST" id="form_buy" name="form_buy">
+    <table class="ncc-table-style" nc_type="table_cart">
+      <thead>
+        <tr>
+          <th class="w50"><label>
+              <input type="checkbox" checked value="1" id="selectAll">
+              全选</label></th>
+          <th></th>
+          <th style="text-align: left;">申请名称</th>
+          <th class="w120">申请数量</th>
+          <th class="w80">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- S one store list -->
+        <volist name="cart_list" id="cart_info">
+        <if condition="$cart_goods_list[$cart_info['id']]['state'] eq true">
+        <tr id="cart_item_{$cart_info['id']}" nc_group="{$cart_info['id']}" class="shop-list {$cart_info['state']?'':'item_disabled'}">
+          <td><input type="checkbox" {$cart_goods_list[$cart_info['id']]['state']=='true' ? 'checked':'disabled'} nc_type="eachGoodsCheckBox" value="{$cart_info['id']}|{$cart_info['num']}" id="cart_id{$cart_info['id']}" name="cart_id[]"></td>
+         
+          <td class="w60"><a href="" target="_blank" class="ncc-goods-thumb"><img src="/{$cart_goods_list[$cart_info['id']]['image']}" alt="{$cart_goods_list[$cart_info['id']]['goods_name']}" /></a></td>
+         
+          <td class="tl"><dl class="ncc-goods-info">
+              <dt><a href="" target="_blank">{$cart_goods_list[$cart_info['id']]['goods_name']}</a></dt>
+
+            </dl></td>
+            <if condition="$cart_goods_list[$cart_info['id']]['state'] eq true">
+          <td class="w120 ws0"><a href="JavaScript:void(0);" onclick="decrease_quantity({$cart_info['id']});" title="减少申请数量" class="add-substract-key tip">-</a>
+            <input id="input_item_{$cart_info['id']}" value="{$cart_info['num']}" orig="{$cart_info['num']}" changed="{$cart_info['num']}" onkeyup="change_quantity({$cart_info['id']}, this);" type="text" class="text w20"/>
+            <a href="JavaScript:void(0);" onclick="add_quantity({$cart_info['id']});" title="增加申请数量" class="add-substract-key tip" >+</a></td>
+          <else />
+          <td class="w120">无效
+            <input type="hidden" value="{$cart_info['id']}" name="invalid_cart[]"></td>
+          </if>
+          <td class="w120">
+            <a href="javascript:void(0)" onclick="drop_cart_item({$cart_info['id']});">删除</a></td>
+        </tr>
+        </if>
+        </volist>
+        <!-- E one store list -->
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="20"><div class="ncc-all-account">申领车申请总数：<em id="cartTotal">{$cart_list|count}</em></div></td>
+        </tr>
+      </tfoot>
+    </table>
+    <div class="ncc-title" style="height: 25px;">
+    	<h3>填写申请信息</h3>
+ 	</div>
+ 	<table class="ncc-table-style" nc_type="table_cart">
+      <thead>
+        <tr>
+          <th class="w20">申请人</th>
+          <th class="w50">单位名称</th>
+          <th class="w80" colspan="2" style="  width: 73px;">使用时间</th>
+          <th style="  width: 300px;">用途</th>
+        </tr>
+      </thead>
+      <tfoot>
+        <tr>
+        <td class="w20" style="text-align:center">
+        <input type="text" value="{$member['truename']}" class="text w50" name="truename" maxlength="60">
+        <p></p>
+        </td>
+        <td style="text-align:center">
+          <input type="text" value="{$member['company']}" class="text" name="company" maxlength="150" style="width:200px">
+          &nbsp;<p></p></td>
+           <td style="text-align:center;width:99px ">
+          <input type="text" value="" class="text" name="start_time" id="start_time" maxlength="150" style="float:left;width:60px"><p style="float:left;padding:0 5px 0">至</p>
+          <p></p></td>
+          <td  style="text-align:center;width:65px  ">
+          <input type="text" value="" class="text" name="end_time" id="end_time" maxlength="150" style="float:left;width:60px;">
+          &nbsp;<p></p></td>
+        <td style="text-align:center;width: 300px;"><textarea type="text" style="width: 300px;  height: 50px;" class="text" name="using" maxlength="150"></textarea></td>
+      </tr>
+      </tfoot>
+    </table>
+  </form>
+  <div class="ncc-bottom"><a id="next_submit" href="javascript:void(0)" class="ncc-btn ncc-btn-acidblue fr">提交申领</a></div>
+</div>
+
+<script type="text/javascript" src="__JS__/jquery-ui/i18n/zh-CN.js" charset="utf-8"></script>
+<script>
+$(document).ready(function(){
+//提示信息
+$('.tip').poshytip({
+	className: 'tip-yellowsimple',
+	showOn: 'hover',
+	alignTo: 'target',
+	alignX: 'center',
+	alignY: 'top',
+	offsetX: 0,
+	offsetY: 5,
+	allowTipHover: false
+});
+$('#start_time').datepicker();
+$('#end_time').datepicker();
+})
+</script>
+</block>
+

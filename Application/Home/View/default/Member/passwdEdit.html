@@ -1,0 +1,81 @@
+<extend name="Base/member_common" />
+<block name="main">
+<div class="wrap">
+<div class="tabmenu">
+	<ul class="tab pngFix">
+	  <li  <eq name="sign" value="1"> class="active"<else/>class="normal"</eq>><a href="{:U('Member/index',array('sign'=>1))}">基本信息</a></li>
+	  <li  <eq name="sign" value="2"> class="active"<else/>class="normal"</eq>><a href="{:U('Member/passwdEdit',array('sign'=>2))}">修改密码</a></li>
+	  <li  <eq name="sign" value="3"> class="active"<else/>class="normal"</eq>><a href="{:U('Member/avatar',array('sign'=>3))}">更换头像</a></li>
+  </ul>
+</div>
+  <div class="ncu-form-style">
+    <form method="post" id="password_form" name="password_form" action="{$web_root_path}/Home/Member/passwdEdit">
+      <input type="hidden" name="form_submit" value="ok"  />
+      <dl>
+        <dt class="required"><em class="pngFix"></em>您的密码：</dt>
+        <dd>
+          <input type="password"  maxlength="40" class="text" name="old" id="orig_password" />
+          <label for="orig_password" generated="true" class="error"></label>
+        </dd>
+      </dl>
+      <dl>
+        <dt class="required"><em class="pngFix"></em>新密码：</dt>
+        <dd>
+          <input type="password"  maxlength="40" class="password" name="password" id="new_password"/>
+          <label for="new_password" generated="true" class="error"></label>
+        </dd>
+      </dl>
+      <dl>
+        <dt class="required"><em class="pngFix"></em>确认密码：</dt>
+        <dd>
+          <input type="password" maxlength="40" class="password" name="repassword" id="confirm_password" />
+          <label for="confirm_password" generated="true" class="error"></label>
+        </dd>
+      </dl>
+      <dl class="bottom">
+        <dt>&nbsp;</dt>
+        <dd>
+          <input type="submit" class="submit" value="修改" />
+        </dd>
+      </dl>
+    </form>
+  </div>
+</div>
+<script src="__JS__/jquery.validation.min.js"></script>
+<script type="text/javascript">
+$(function(){
+    $('#password_form').validate({
+         submitHandler:function(form){
+            ajaxpost('password_form', '', '', 'onerror') 
+        },   
+        rules : {
+            old : {
+                required : true
+            },
+            password : {
+                required   : true,
+                minlength  : 6,
+                maxlength  : 20
+            },
+            repassword : {
+                required   : true,
+                equalTo    : '#new_password'
+            }
+        },
+        messages : {
+            old : {
+                required : '旧密码不能为空'
+            },
+            password  : {
+                required   : '新密码不能为空',
+                minlength  : '范围不正确'
+            },
+            repassword : {
+                required   : '确认密码不能为空',
+                equalTo    : '确认密码与新密码不一致'
+            }
+        }
+    });
+});
+</script> 
+</block>

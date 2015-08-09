@@ -9,7 +9,7 @@
 
         <form action="{:U()}" method="get" class="form-inline">
             <a class="btn" href="{:U('add')}">新 增</a>
-        <input class="text input-large" name="map" id="map" placeholder="地图名称" value="{$search.map}" />
+        <input class="text input-large" name="name" id="map" placeholder="地图名称" value="{$search.name}" />
             <input class="text input-small" name="msn" id="msn" placeholder="地图编码" value="{$search.msn}"  />
             <label for="sea_id">海域</label>
             <select name="sea_id" id="sea_id">
@@ -35,6 +35,7 @@
                     <th>比例尺</th>
                     <th>库存/总计</th>
                     <th>中/英</th>
+                    <th>状态</th>
                     <th>操作</th>
 				</tr>
 			</thead>
@@ -43,13 +44,14 @@
 				<volist name="list" id="map">
 					<tr>
 						<td>{$map.msn}</td>
-						<td><a href="{:U('index?pid='.$channel['id'])}">{$map.map}</a></td>
+						<td><a href="{:U('index?pid='.$channel['id'])}">{$map.name}</a></td>
 						<td>{$map.sid}</td>
                         <td>{:dufenmiaochar($map['longitude1'])}<br>{:dufenmiaochar($map['longitude2'])}</td>
                         <td>{:dufenmiaochar($map['latitude1'])}<br>{:dufenmiaochar($map['latitude2'])}</td>
                         <td>1:{$map.scale}</td>
                         <td>{$map.inventory}/{$map.total}</td>
                         <td>{$map.language}</td>
+                        <td><eq name="map.status" value="1" >启用<else/>停用</eq></td>
 						<td>
 							<a title="编辑" href="{:U('edit?id='.$map['id'])}">编辑</a>
 							<a class="confirm ajax-get" title="删除" href="{:U('del?id='.$map['id'])}">删除</a>

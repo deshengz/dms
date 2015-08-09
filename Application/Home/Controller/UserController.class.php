@@ -22,15 +22,15 @@ class UserController extends HomeController {
 	}
 
 	/* 注册页面 */
-	public function register($username = '', $password = '', $repassword = '', $email = '', $verify = ''){
+	public function register($username = '', $password = '', $repassword = '', $truename = '', $company = '', $duty = '', $tel = '', $mobile = ''){
         if(!C('USER_ALLOW_REGISTER')){
             $this->error('注册已关闭');
         }
 		if(IS_POST){ //注册用户
 			/* 检测验证码 */
-			if(!check_verify($verify)){
-				$this->error('验证码输入错误！');
-			}
+//			if(!check_verify($verify)){
+//				$this->error('验证码输入错误！');
+//			}
 
 			/* 检测密码 */
 			if($password != $repassword){
@@ -39,7 +39,7 @@ class UserController extends HomeController {
 
 			/* 调用注册接口注册用户 */
             $User = new UserApi;
-			$uid = $User->register($username, $password, $email);
+			$uid = $User->register($username, $password, $truename, $company, $duty, $tel , $mobile);
 			if(0 < $uid){ //注册成功
 				//TODO: 发送验证邮件
 				$this->success('注册成功！',U('login'));
@@ -54,11 +54,12 @@ class UserController extends HomeController {
 
 	/* 登录页面 */
 	public function login($username = '', $password = '', $verify = ''){
-		if(IS_POST){ //登录验证
+		
+		if(IS_POST||I('form_submit')=="ok"){ //登录验证
 			/* 检测验证码 */
-			if(!check_verify($verify)){
-				$this->error('验证码输入错误！');
-			}
+//			if(!check_verify($verify)){
+//				$this->error('验证码输入错误！');
+//			}
 
 			/* 调用UC登录接口登录 */
 			$user = new UserApi;
@@ -68,9 +69,18 @@ class UserController extends HomeController {
 				$Member = D('Member');
 				if($Member->login($uid)){ //登录用户
 					//TODO:跳转到登录前页面
-					$this->success('登录成功！',U('Home/Index/index'));
+					if(I('form_submit')=="ok"){
+						showDialog ("登陆成功", 'reload', 'succ', '');
+					}else{
+						
+						$this->success('登录成功！',U('Home/Index/index'));
+					}
 				} else {
-					$this->error($Member->getError());
+					if(I('form_submit')=="ok"){
+						showDialog ("登陆失败", '', 'error', '');
+					}else{
+						$this->error($Member->getError());
+					}
 				}
 
 			} else { //登录失败
@@ -79,11 +89,20 @@ class UserController extends HomeController {
 					case -2: $error = '密码错误！'; break;
 					default: $error = '未知错误！'; break; // 0-接口参数错误（调试阶段使用）
 				}
-				$this->error($error);
+				if(I('form_submit')=="ok"){
+					showDialog ("用户名或密码错误", '', 'error', '');
+				}else{
+					$this->error($error);
+				}
 			}
 
 		} else { //显示登录表单
-			$this->display();
+			if(I('inajax')==1){
+				$this->assign("web_root_path",WEB_ROOT_PATH);
+				$this->display("ajax_login");
+			}else{
+				$this->display();
+			}
 		}
 	}
 
@@ -91,7 +110,8 @@ class UserController extends HomeController {
 	public function logout(){
 		if(is_login()){
 			D('Member')->logout();
-			$this->success('退出成功！', U('User/login'));
+			$this->ajaxReturn(true);
+			//$this->success('退出成功！', U('User/login'));
 		} else {
 			$this->redirect('User/login');
 		}
@@ -160,5 +180,14 @@ class UserController extends HomeController {
             $this->display();
         }
     }
+	public function check_member() {
+		$User = new UserApi;
+		$check_member_name = $User->info (I('username'),$is_username = true);
+		if (is_array ( $check_member_name ) and count ( $check_member_name ) > 0) {
+			echo 'false';
+		} else {
+			echo 'true';
+		}
+	}
 
 }

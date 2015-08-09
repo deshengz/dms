@@ -1,0 +1,30 @@
+<div class="quick-login">
+  <form id="login_form" action="{$web_root_path}/Home/User/login/inajax/1" method="post"   class="bg" >    
+    <input type="hidden" name="form_submit" value="ok" />
+    <dl>
+      <dt>用户名</dt>
+      <dd>
+        <input type="text" class="text" autocomplete="off"  name="username" id="user_name">
+      </dd>
+    </dl>
+    <dl>
+      <dt>密码</dt>
+      <dd>
+        <input type="password" class="text" name="password" autocomplete="off"  id="password">
+      </dd>
+    </dl>
+    <ul>
+      <li><a href="{:U('User/register')}" class="register">注册</a></li>
+      <li><a href="javascript:void(0)" class="forget" nc_type="dialog" dialog_id="forget_password" dialog_width="480" dialog_title="忘记密码" uri="">忘记密码</a></li>
+    </ul>
+    <div class="enter">
+      <input type="submit" class="submit" value="登录" name="Submit">
+    </div>
+  </form>
+</div>
+<script>
+	$('.submit').click(function(){
+		ajaxpost('login_form', '', '', 'onerror');
+		return false;
+	});
+</script>

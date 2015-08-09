@@ -8,11 +8,11 @@
 	</div>
 
 	<form action="{:U()}" method="post" class="form-horizontal" enctype=”multipart/form-data”>
-		<input type="hidden" name="mid" value="{$mid}">
+		<input type="hidden" name="id" value="{$id}">
 		<div class="form-item">
 			<label class="item-label">地图名称<span class="check-tips">（用于显示的文字）</span></label>
 			<div class="controls">
-				<input type="text" class="text input-large required" name="map" value="{$map.map|default=''}" placeholder="请输入海图名"  aria-required="true" aria-invalid="true">
+				<input type="text" class="text input-large required" name="name" value="{$map.name|default=''}" placeholder="请输入海图名"  aria-required="true" aria-invalid="true">
 			</div>
 		</div>
 		<div class="form-item">
@@ -131,7 +131,6 @@
             'formData': { 'session': '<?php echo session_id();?>'},
             'onUploadSuccess' : function(file, data, response) {
                 //把所有上传的图片都放入DIV中
-                alert(data);
                 $(".img_thumb").attr("src","/Uploads/Picture/"+data);
                 $("#image").val(data);
             }

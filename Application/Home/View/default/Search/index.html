@@ -1,0 +1,129 @@
+<extend name="Base/common" />
+<block name="body">
+	<div class="search-container">
+		<img src="__IMG__/logo.png" />
+		<p>海军院校实习图库管理系统</p>
+		<form action="{:U('Search/index')}">
+			<select name="search_cate">
+				<option value="all">全部</option>
+				<option value="map">海图</option>
+				<option value="book">航海图书</option>
+				<option value="equipment">航海器械</option>
+			</select>
+			<input type="text" name="keyword"/>
+			<input type="submit" class="form_button" value="搜索"/>
+		</form>
+	</div>
+	<div class="search-keyword">
+		<div class="search-line">
+			<p style="float: left;">搜索条件:</p><a>东海</a>
+			<select class="search-select">
+				<option>按照编号正序</option>
+			</select>
+			<p style="float: right;text-align: right; padding-right: 10px;">排序:</p>
+		</div>
+
+		<div class="search-line">
+			<p style="float: left;">海域:</p><a>全部</a><a>东海</a><a>南海</a><a>西海</a><a>北海</a>
+		</div>
+		<div class="search-line">
+			<p style="float: left;">比例尺:</p><a>全部</a><a>1:10</a><a>1:100</a><a>1:1000</a><a>1:10000</a>
+		</div>
+		<div class="search-line">
+			<p style="float: left;">包含的坐标点:</p><a>经度</a><a>纬度</a>
+		</div>
+	</div>
+	<notempty name="map_list">
+		<div class="search-list">
+			<div class="list-cate">海图</div>
+			<volist name="map_list" id="vo">
+			<div class="list">
+				<img src="__IMG__/map.jpg"  dialog_id="show_info" dialog_width="600" dialog_title="{$vo.name} 详情" nc_type="dialog" uri="{:U('Search/show_info',array('search_cate'=>map,'id'=>$vo['id']))}">
+				<div class="list-detail">
+					<p class="detail-title"   dialog_id="show_info" dialog_width="600" dialog_title="{$vo.name} 详情" nc_type="dialog" uri="{:U('Search/show_info',array('search_cate'=>map,'id'=>$vo['id']))}">{$vo.name}</p>
+					<p class="detail-spec">{$vo.scale}</p>
+					<p class="detail-stock">库存:<em>{$vo.inventory}</em></p>
+				</div>
+				<div class="list-action">
+					<div class="collect"><a  href="javascript:collect_goods('{$vo.id}','map');"><img src="__IMG__/collect.png" title="收藏"></a></div>
+					<button class="apply"  dialog_id="show_info" dialog_width="600" dialog_title="{$vo.name} 详情" nc_type="dialog" uri="{:U('Search/show_info',array('search_cate'=>map,'id'=>$vo['id']))}">申领车</button>
+				</div>
+			</div>
+			</volist>
+		</div>
+	</notempty>
+	<notempty name="book_list">
+		<div class="search-list">
+			<div class="list-cate">航海图书</div>
+			<volist name="book_list" id="vo">
+			<div class="list">
+				<img src="__IMG__/map.jpg"  dialog_id="show_info" dialog_width="600" dialog_title="{$vo.name} 详情" nc_type="dialog" uri="{:U('Search/show_info',array('search_cate'=>book,'id'=>$vo['id']))}">
+				<div class="list-detail">
+					<p class="detail-title"   dialog_id="show_info" dialog_width="600" dialog_title="{$vo.name} 详情" nc_type="dialog" uri="{:U('Search/show_info',array('search_cate'=>book,'id'=>$vo['id']))}">{$vo.name}</p>
+					<p class="detail-spec">{$vo.scale}</p>
+					<p class="detail-stock">库存:<em>{$vo.inventory}</em></p>
+				</div>
+				<div class="list-action">
+					<div class="collect"><a  href="javascript:collect_goods('{$vo.id}','book');"><img src="__IMG__/collect.png" title="收藏"></a></div>
+					<button class="apply"  dialog_id="show_info" dialog_width="600" dialog_title="{$vo.name} 详情" nc_type="dialog" uri="{:U('Search/show_info',array('search_cate'=>book,'id'=>$vo['id']))}">申领车</button>
+				</div>
+			</div>
+			</volist>
+		</div>
+	</notempty>
+	<notempty name="equipment_list">
+		<div class="search-list">
+			<div class="list-cate">航海器材</div>
+			<volist name="equipment_list" id="vo">
+			<div class="list">
+				<img src="__IMG__/map.jpg"  dialog_id="show_info" dialog_width="600" dialog_title="{$vo.name} 详情" nc_type="dialog" uri="{:U('Search/show_info',array('search_cate'=>equipment,'id'=>$vo['id']))}">
+				<div class="list-detail">
+					<p class="detail-title"   dialog_id="show_info" dialog_width="600" dialog_title="{$vo.name} 详情" nc_type="dialog" uri="{:U('Search/show_info',array('search_cate'=>equipment,'id'=>$vo['id']))}">{$vo.name}</p>
+					<p class="detail-spec">{$vo.scale}</p>
+					<p class="detail-stock">库存:<em>{$vo.inventory}</em></p>
+				</div>
+				<div class="list-action">
+					<div class="collect"><a  href="javascript:collect_goods('{$vo.id}','equipment');"><img src="__IMG__/collect.png" title="收藏"></a></div>
+					<button class="apply" dialog_id="show_info" dialog_width="600" dialog_title="{$vo.name} 详情" nc_type="dialog" uri="{:U('Search/show_info',array('search_cate'=>equipment,'id'=>$vo['id']))}">申领车</button>
+				</div>
+			</div>
+			</volist>
+		</div>
+	</notempty>
+</block>
+<block name="script">
+<script>
+	function collect_goods(fav_id,type){
+        if('{$uid}'=='0'){
+            login_dialog();
+        }else{
+            var url = '{:U('Favorites/add')}';
+            $.getJSON(url, {'fid':fav_id,'type':type}, function(data){
+                if (data.done)
+            {
+            	showDialog(data.msg, 'succ','','','','','','','','',2);
+            }
+                else
+            {
+                showDialog(data.msg, 'notice');
+            }
+            });
+        }
+	}
+	function login_dialog(){
+	    CUR_DIALOG = ajax_form('login','登录','{:U('User/login',array('inajax'=>1))}',360,1);
+	}
+	/* ajax表单 */
+	function ajax_form(id, title, url, width, model)
+	{
+	    if (!width)	width = 480;
+	    if (!model) model = 1;
+	    var d = DialogManager.create(id);
+	    d.setTitle(title);
+	    d.setContents('ajax', url);
+	    d.setWidth(width);
+	    d.show('center',model);
+	    return d;
+	}
+	</script>
+</block>

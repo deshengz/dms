@@ -12,7 +12,7 @@ use Think\Model;
 use User\Api\UserApi;
 
 /**
- * 文档基础模型
+ * 会员模型
  */
 class MemberModel extends Model{
 
@@ -23,6 +23,7 @@ class MemberModel extends Model{
         array('reg_time', NOW_TIME, self::MODEL_INSERT),
         array('last_login_ip', 0, self::MODEL_INSERT),
         array('last_login_time', 0, self::MODEL_INSERT),
+        array('update_time', NOW_TIME),
         array('status', 1, self::MODEL_INSERT),
     );
 
@@ -38,7 +39,7 @@ class MemberModel extends Model{
             /* 在当前应用中注册用户 */
         	$Api = new UserApi();
         	$info = $Api->info($uid);
-            $user = $this->create(array('nickname' => $info[1], 'status' => 1));
+            $user = $this->create(array('nickname' => $info[1],'truename' => $info[4], 'status' => 1));
             $user['uid'] = $uid;
             if(!$this->add($user)){
                 $this->error = '前台用户信息注册失败，请重试！';
@@ -91,6 +92,13 @@ class MemberModel extends Model{
         session('user_auth', $auth);
         session('user_auth_sign', data_auth_sign($auth));
 
+    }
+    /**
+     * 获取会员信息
+     */
+    public function getMemberInfo($uid){
+    	$member_info = $this->field(true)->find($uid);
+    	return $member_info;
     }
 
 }

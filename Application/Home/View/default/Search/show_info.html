@@ -1,0 +1,119 @@
+<div class="show-info">
+	<img src="__IMG__/map.jpg" class="info-img">
+	<div class="info-detail">
+		<p class="info-title">{$info.name}</p>
+		<p class="info-spec">比例尺：<em>{$info.scale}</em></p>
+		<p class="info-stock">库存：<em class="inventory">{$info.inventory}</em></p>
+	</div>
+	<div class="info-action">
+		<div class="quantity">
+			<input type="text" name="" style="padding: 4px !important;" id="quantity" value="1" size="3" maxlength="6" class="text">
+			<a href="javascript:void(0)" class="increase">+</a><a href="javascript:void(0)" class="decrease">-</a>
+		</div>
+		<div class="info-collect">
+			<a  href="javascript:collect_goods('{$info.id}','{$info.type}');"><img src="__IMG__/collect.png" title="收藏"></a>
+		</div>
+		<button class="info-apply">加入申领车</button>
+	</div>
+</div>
+<script>
+	$('.increase').click(function() {
+		num = parseInt($('#quantity').val());
+		max = {$info.inventory};
+		if (num >= max) {
+			alert('最多申领'+max+'件');
+			return false;
+		}
+		max = parseInt($('.inventory').text());
+		if (num < max) {
+			$('#quantity').val(num + 1);
+		}
+	});
+	//鍑忓皯
+	$('.decrease').click(function() {
+		num = parseInt($('#quantity').val());
+		if (num > 1) {
+			$('#quantity').val(num - 1);
+		}
+	});
+	// 申领
+	$('.info-apply').click(function(){
+    	if('{$uid}'=='0'){
+    		login_dialog();
+    	}else{
+    		addcart({$info.id},'{$cart_type}', checkQuantity());
+    	}
+    });
+    // 楠岃瘉璐拱鏁伴噺
+	function checkQuantity(){
+	    var quantity = parseInt($("#quantity").val());
+	    if (quantity < 1) {
+	        alert("申领数量不能为零");
+	        $("#quantity").val('1');
+	        return false;
+	    }
+	    max = parseInt($('inventory').text());
+	    if(quantity > max){
+	        alert("申领数量 不能超过库存");
+	        return false;
+	    }
+	    return quantity;
+	}
+/* add cart */
+	function addcart(id,cart_type,quantity)
+	{
+		if (!quantity) return false;
+	    var url = '{:U('Cart/add')}';
+		
+	    $.getJSON(url, {'id':id,'cart_type':cart_type ,'quantity':quantity}, function(data){
+	    	if(data != null){
+	    		if (data.state)
+	            {	
+	    			$('.addcart-goods-num').text(data.cart_count);
+	    			showDialog(data.msg, 'succ');
+//	                $('#bold_num').html(data.num);
+//	                $('#bold_mly').html(price_format(data.amount));
+//	                $('.ncs-cart-popup').fadeIn('fast');
+	//                 setTimeout(slideUp_fn, 5000);
+	                // 澶撮儴鍔犺浇璐墿杞︿俊鎭�	                //load_cart_information();
+	            }
+	            else
+	            {
+	                alert(data.msg);
+	            }
+	    	}
+	    });
+	}
+	function login_dialog(){
+	    CUR_DIALOG = ajax_form('login','登录','{:U('User/login',array('inajax'=>1))}',360,1);
+	}
+	/* ajax表单 */
+	function ajax_form(id, title, url, width, model)
+	{
+	    if (!width)	width = 480;
+	    if (!model) model = 1;
+	    var d = DialogManager.create(id);
+	    d.setTitle(title);
+	    d.setContents('ajax', url);
+	    d.setWidth(width);
+	    d.show('center',model);
+	    return d;
+	}
+	function collect_goods(fav_id,type){
+        if('{$uid}'=='0'){
+            login_dialog();
+        }else{
+            var url = '{:U('Favorites/add')}';
+            $.getJSON(url, {'fid':fav_id,'type':type}, function(data){
+                if (data.done)
+            {
+            	showDialog(data.msg, 'succ','','','','','','','','',2);
+            }
+                else
+            {
+                showDialog(data.msg, 'notice');
+            }
+            });
+        }
+	}
+</script>

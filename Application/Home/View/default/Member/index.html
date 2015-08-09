@@ -1,0 +1,124 @@
+<extend name="Base/member_common" />
+<block name="main">
+<link rel="stylesheet" type="text/css" href="__JS__/jquery-ui/themes/ui-lightness/jquery.ui.css"  />
+<style type="text/css">
+dl dd span {
+	display: inline-block;
+}
+</style>
+
+<div class="wrap">
+  <div class="tabmenu">
+  	<ul class="tab pngFix">
+	  <li  <eq name="sign" value="1"> class="active"<else/>class="normal"</eq>><a href="{:U('Member/index',array('sign'=>1))}">基本信息</a></li>
+	  <li  <eq name="sign" value="2"> class="active"<else/>class="normal"</eq>><a href="{:U('Member/passwdEdit',array('sign'=>2))}">修改密码</a></li>
+	  <li  <eq name="sign" value="3"> class="active"<else/>class="normal"</eq>><a href="{:U('Member/avatar',array('sign'=>3))}">更换头像</a></li>
+  </ul>
+  </div>
+  <div class="ncu-form-style">
+    <form method="post" id="profile_form" action="{$web_root_path}/Home/Member/index">
+      <input type="hidden" name="form_submit" value="ok" />
+      <input type="hidden" name="old_member_avatar" value="<?php echo $output['member_info']['member_avatar']; ?>" />
+      <dl>
+        <dt>用户名称：</dt>
+        <dd><span class="w340">{$member['nickname']}</span></dd>
+      </dl>
+      <dl>
+        <dt>手机号：</dt>
+        <dd><span class="w340">{$member['mobile']}</span></dd>
+      </dl>
+      <dl>
+        <dt>真实姓名：</dt>
+        <dd><span class="w340">
+          <input type="text" class="text" maxlength="20" name="member_truename" value="{$member['truename']}" />
+          </span></dd>
+      </dl>
+      <dl>
+        <dt>性别：</dt>
+        <dd><span class="w340">
+          <label>
+            <input type="radio" name="member_sex" value="1" <eq name="member['sex']" value='1'> checked="checked"</eq> />
+            	男</label>
+         &nbsp;&nbsp;
+          <label>
+            <input type="radio" name="member_sex" value="2"  <eq name="member['sex']" value='2'> checked="checked"</eq> />
+            	女</label>
+         
+          </span></dd>
+      </dl>
+      <dl>
+        <dt>生日：</dt>
+        <dd><span class="w340">
+          <input type="text" style="width:75px !important" class="text" name="birthday" maxlength="10" id="birthday" value="{$member['birthday']}" />
+          </span></dd>
+      </dl>
+      <dl>
+        <dt>QQ：</dt>
+        <dd><span class="w340">
+          <input type="text" class="text" maxlength="30" name="member_qq" value="{$member['qq']}" />
+          </span></dd>
+      </dl>
+      <dl>
+        <dt>职务：</dt>
+        <dd><span class="w340">
+          <input type="text" class="text" maxlength="30" name="member_duty" value="{$member['duty']}" />
+          </span></dd>
+      </dl>
+      <dl>
+        <dt>座机号码：</dt>
+        <dd><span class="w340">
+          <input type="text" class="text" maxlength="30" name="member_tel" value="{$member['tel']}" />
+          </span></dd>
+      </dl>
+      <dl>
+        <dt>单位名称：</dt>
+        <dd><span class="w340">
+          <input type="text" class="text" maxlength="30" name="member_company" value="{$member['company']}" />
+          </span></dd>
+      </dl>
+      <dl class="bottom">
+        <dt>&nbsp;</dt>
+        <dd>
+          <input type="submit" class="submit" value="保存" />
+        </dd>
+      </dl>
+    </form>
+  </div>
+</div>
+<script src="__JS__/jquery.validation.min.js"></script>
+<script type="text/javascript">
+//注册表单验证
+$(function(){
+	//regionInit("region");
+	$('#birthday').datepicker({dateFormat: 'yy-mm-dd'});
+    $('#profile_form').validate({
+    	submitHandler:function(form){
+    		ajaxpost('profile_form', '', '', 'onerror')
+		},
+        rules : {
+            member_truename : {
+				minlength : 2,
+                maxlength : 20
+            },
+            member_qq : {
+				digits  : true,
+                minlength : 5,
+                maxlength : 12
+            }
+        },
+        messages : {
+            member_truename : {
+				minlength : '请输入2-20个字符',
+                maxlength : '请输入2-20个字符'
+            },
+            member_qq  : {
+				digits    : 'qq格式不正确',
+                minlength : 'qq格式不正确',
+                maxlength : 'qq格式不正确'
+            }
+        }
+    });
+});
+</script> 
+<script charset="utf-8" type="text/javascript" src="__JS__/jquery-ui/i18n/zh-CN.js" ></script>
+</block>

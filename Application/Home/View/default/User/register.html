@@ -1,103 +1,187 @@
 <extend name="Base/common" />
-<block name="header">
-<header class="jumbotron subhead" id="overview">
-  <div class="container">
-    <h2>用户注册</h2>
-    <p><span><span class="pull-left"><span>已经有账号? <a href="{:U('User/login')}">点此登录</a> </span> </span></p>
-  </div>
-</header>
-</block>
-
 <block name="body">
-
-<section>
-	<div class="span12">
-        <form class="login-form" action="__SELF__" method="post">
-          <div class="control-group">
-            <label class="control-label" for="inputEmail">用户名</label>
-            <div class="controls">
-              <input type="text" id="inputEmail" class="span3" placeholder="请输入用户名"  ajaxurl="/member/checkUserNameUnique.html" errormsg="请填写1-16位用户名" nullmsg="请填写用户名" datatype="*1-16" value="" name="username">
-            </div>
-          </div>
-          <div class="control-group">
-            <label class="control-label" for="inputPassword">密码</label>
-            <div class="controls">
-              <input type="password" id="inputPassword"  class="span3" placeholder="请输入密码"  errormsg="密码为6-20位" nullmsg="请填写密码" datatype="*6-20" name="password">
-            </div>
-          </div>
-          <div class="control-group">
-            <label class="control-label" for="inputPassword">确认密码</label>
-            <div class="controls">
-              <input type="password" id="inputPassword" class="span3" placeholder="请再次输入密码" recheck="password" errormsg="您两次输入的密码不一致" nullmsg="请填确认密码" datatype="*" name="repassword">
-            </div>
-          </div>
-          <div class="control-group">
-            <label class="control-label" for="inputEmail">邮箱</label>
-            <div class="controls">
-              <input type="text" id="inputEmail" class="span3" placeholder="请输入电子邮件"  ajaxurl="/member/checkUserEmailUnique.html" errormsg="请填写正确格式的邮箱" nullmsg="请填写邮箱" datatype="e" value="" name="email">
-            </div>
-          </div>
-          <div class="control-group">
-            <label class="control-label" for="inputPassword">验证码</label>
-            <div class="controls">
-              <input type="text" id="inputPassword" class="span3" placeholder="请输入验证码"  errormsg="请填写5位验证码" nullmsg="请填写验证码" datatype="*5-5" name="verify">
-            </div>
-          </div>
-          <div class="control-group">
-            <label class="control-label"></label>
-            <div class="controls">
-                <img class="verifyimg reloadverify" alt="点击切换" src="{:U('verify')}" style="cursor:pointer;">
-            </div>
-            <div class="controls Validform_checktip text-warning"></div>
-          </div>
-          <div class="control-group">
-            <div class="controls">
-              <button type="submit" class="btn">注 册</button>
-            </div>
-          </div>
-        </form>
-	</div>
-</section>
-
+<div class="search-container">
+			<img src="__IMG__/logo.png" />
+				<p>海军院校实习图库管理系统</p>
+					<form action="{:U('Search/index')}">
+			<select name="search_cate">
+				<option value="all">全部</option>
+				<option value="map">海图</option>
+				<option value="book">航海图书</option>
+				<option value="equipment">航海器械</option>
+			</select>
+			<input type="text" name="keyword"/>
+			<input type="submit" class="form_button" value="搜索"/>
+		</form>
+		</div>
+		<div class="container" style="background: url(__IMG__/login1.png) no-repeat;height: 835px;">
+			<div style="width: 1200px;margin: 0 auto;position: relative;padding-top: 100px;">
+				<div class="register-form" style="height:715px;">
+					<p class="login-title">注册</p>
+					<div class="input-area" style="height: 602px;">
+						<form action="__SELF__" method="post" id="register_form">
+						<p>用户名</p>
+						<input type="text" id="username" name="username" class="tip" title="3-20位字符"/>
+						<p>密码</p>
+						<input type="text" id="password" name="password" class="tip"  title="6-20位密码"/>
+						<p>确认密码</p>
+						<input type="text" name="repassword" class="tip"  title="请确认密码"/>
+						<p>真实姓名</p>
+						<input type="text" name="truename" class="tip"  title="您的真实姓名"/>
+						<p>单位</p>
+						<input type="text" name="company" class="tip"  title="单位名称"/>
+						<p>职务</p>
+						<input type="text" name="duty" class="tip"  title="您的职务"/>
+						<p>单位座机</p>
+						<input type="text" name="tel" class="tip"  title="座机号码"/>
+						<p>手机号</p>
+						<input type="text" name="mobile" class="tip"  title="您的手机号码"/>
+						<div style="height: 50px;"><p>已经有帐号？<a href="{:U('User/login')}">去登陆</a></p></div>
+						<button type="submit">注册</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
 </block>
-
-<block name="side"> </block>
 <block name="script">
+<script type="text/javascript" src="__JS__/jquery.poshytip.min.js" charset="utf-8"></script> 
+	<script src="__JS__/jquery.validation.min.js"></script>
 	<script type="text/javascript">
-    	$(document)
-	    	.ajaxStart(function(){
-	    		$("button:submit").addClass("log-in").attr("disabled", true);
-	    	})
-	    	.ajaxStop(function(){
-	    		$("button:submit").removeClass("log-in").attr("disabled", false);
-	    	});
-
-
-    	$("form").submit(function(){
-    		var self = $(this);
-    		$.post(self.attr("action"), self.serialize(), success, "json");
-    		return false;
-
-    		function success(data){
-    			if(data.status){
-    				window.location.href = data.url;
-    			} else {
-    				self.find(".Validform_checktip").text(data.info);
-    				//刷新验证码
-    				$(".reloadverify").click();
-    			}
-    		}
-    	});
-
-		$(function(){
-			var verifyimg = $(".verifyimg").attr("src");
-            $(".reloadverify").click(function(){
-                if( verifyimg.indexOf('?')>0){
-                    $(".verifyimg").attr("src", verifyimg+'&random='+Math.random());
-                }else{
-                    $(".verifyimg").attr("src", verifyimg.replace(/\?.*$/,'')+'?'+Math.random());
+	//注册表单提示
+	$('.tip').poshytip({
+		className: 'tip-yellowsimple',
+		showOn: 'focus',
+		alignTo: 'target',
+		alignX: 'center',
+		alignY: 'top',
+		offsetX: 0,
+		offsetY: 5,
+		allowTipHover: false
+	});
+		$(document)
+		jQuery.validator.addMethod("lettersonly", function(value, element) {
+			return this.optional(element) || /^[^:%,'\*\"\s\<\>\&]+$/i.test(value);
+		}, "Letters only please"); 
+		jQuery.validator.addMethod("lettersmin", function(value, element) {
+			return this.optional(element) || ($.trim(value.replace(/[^\u0000-\u00ff]/g,"aa")).length>=3);
+		}, "Letters min please"); 
+		jQuery.validator.addMethod("lettersmax", function(value, element) {
+			return this.optional(element) || ($.trim(value.replace(/[^\u0000-\u00ff]/g,"aa")).length<=15);
+		}, "Letters max please");
+		$("#register_form").validate({
+        errorPlacement: function(error, element){
+            var error_td = element.prev('p');
+            error_td.append(error);
+        },
+        rules : {
+            username : {
+                required : true,
+                lettersmin : true,
+                lettersmax : true,
+                lettersonly : true,
+                minlength: 1,
+				maxlength: 30,
+                remote   : {
+                    url :'{:U('User/check_member')}',
+                    type:'get',
+                    data:{
+                        username : function(){
+                            return $('#username').val();
+                        }
+                    }
                 }
-            });
-		});
+            },
+            password : {
+                required : true,
+                minlength: 6,
+				maxlength: 20
+            },
+            repassword : {
+                required : true,
+                equalTo  : '#password'
+            },
+            truename: {
+                required : true,
+                lettersonly : true
+            },
+			company: {
+                required : true,
+                maxlength : 20
+            },
+			duty: {
+                required : true,
+				maxlength : 20     
+            },
+            mobile : {
+                required : true,
+                minlength : 11,
+				maxlength : 11,                
+                digits : true
+            },
+            tel : {
+                required : true,             
+                digits : true
+            }
+        },
+        messages : {
+            username : {
+                required : '*用户名不能为空',
+                lettersmin : '*用户名必须在3-15个字符之间',
+                lettersmax : '*用户名必须在3-15个字符之间',
+				lettersonly: '*用户名不能包含敏感字符',
+				remote	 : '*用户名已存在'
+            },
+            truename : {
+                required : '*真实姓名不能为空',
+				lettersonly: '*真实姓名不能包含敏感字符'
+            },
+            password  : {
+                required : '*密码不能为空',
+                minlength: '*密码长度应在6-20个字符之间',
+				maxlength: '*密码长度应在6-20个字符之间'
+            },
+            repassword: {
+                required : '*您必须再次确认您的密码',
+                equalTo  : '*两次输入的密码不一致'
+            },
+            mobile : {
+                required : '*手机不能为空',
+                minlength: '*错误的手机号码',
+				maxlength: '*错误的手机号码',
+                digits : '*错误的手机号码'
+            },
+            tel : {
+                required : '*座机不能为空',
+                digits : '*错误的座机号码'
+            },
+            duty : {
+                required : '*职务不能为空',
+                maxlength : '*最多不能超过20字符'
+            },
+            company : {
+                required : '*单位不能为空',
+                maxlength : '*最多不能超过20字符'
+            }
+        }
+    });
+	
+	
+	    	$("#register_form").submit(function(){
+	    		if($("#register_form").valid()){
+	    			var self = $(this);
+		    		$.post(self.attr("action"), self.serialize(), success, "json");
+		    		return false;
+		    		function success(data){
+		    			if(data.status){
+		    				showDialog(data.info, 'succ','','','','','','','',2);
+		    				window.setTimeout(window.location.href = data.url,5000);
+		    			} else {
+		    				showDialog(data.info, 'error');
+		    			}
+		    		}
+	            }
+	    		
+	    	});
 	</script>
 </block>

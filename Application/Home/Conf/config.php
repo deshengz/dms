@@ -62,6 +62,7 @@ return array(
         '__IMG__'    => __ROOT__ . '/Public/' . MODULE_NAME . '/images',
         '__CSS__'    => __ROOT__ . '/Public/' . MODULE_NAME . '/css',
         '__JS__'     => __ROOT__ . '/Public/' . MODULE_NAME . '/js',
+        '__UPLOADS__'     => __ROOT__ . '/Uploads',
     ),
 
     /* SESSION 和 COOKIE 配置 */
