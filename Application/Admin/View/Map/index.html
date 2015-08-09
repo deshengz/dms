@@ -49,7 +49,7 @@
                         <td>{:dufenmiaochar($map['longitude1'])}<br>{:dufenmiaochar($map['longitude2'])}</td>
                         <td>{:dufenmiaochar($map['latitude1'])}<br>{:dufenmiaochar($map['latitude2'])}</td>
                         <td>1:{$map.scale}</td>
-                        <td>{$map.inventory}/{$map.total}</td>
+                        <td>{$map.inventory}/{$map['inventory']+$map['apply_num']}</td>
                         <td>{$map.language}</td>
                         <td><eq name="map.status" value="1" >启用<else/>停用</eq></td>
 						<td>

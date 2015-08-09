@@ -2,15 +2,15 @@
 
 <block name="body">
 	<div class="main-title">
-		<h2>图书管理</h2>
+		<h2>器材管理</h2>
 	</div>
 
 	<div class="cf">
 
         <form action="{:U()}" method="get" class="form-inline">
             <a class="btn" href="{:U('add')}">新 增</a>
-        <input class="text input-large" name="name" id="book" placeholder="图书名称" value="{$search.name}" />
-            <input class="text input-small" name="bsn" id="bsn" placeholder="图书编码" value="{$search.bsn}"  />
+        <input class="text input-large" name="name" id="name" placeholder="器材名称" value="{$search.name}" />
+            <input class="text input-small" name="esn" id="esn" placeholder="器材编码" value="{$search.esn}"  />
             </select>
             <button class="btn" type="submit">查找</button>
         </form>
@@ -23,8 +23,6 @@
 
 					<th>SN</th>
 					<th>名称</th>
-					<th>出版社</th>
-                    <th>出版日期</th>
                     <th>库存/总计</th>
                     <th>状态</th>
                     <th>操作</th>
@@ -32,17 +30,16 @@
 			</thead>
 			<tbody>
 				<notempty name="list">
-				<volist name="list" id="book">
+				<volist name="list" id="info">
 					<tr>
-						<td>{$book.bsn}</td>
-						<td>{$book.name}</a></td>
-						<td>{$book.press}</td>
-                        <td>{$book.publication_date}</td>
-                        <td>{$book.inventory}/{$book.total}</td>
-                        <td><eq name="book.status" value="1" >启用<else/>停用</eq></td>
+						<td>{$info.esn}</td>
+						<td>{$info.name}</a></td>
+                        <td>{$info.inventory}/{$info['inventory']+$info['apply_num']}</td>
+
+                        <td><eq name="info.status" value="1" >启用<else/>停用</eq></td>
 						<td>
-							<a title="编辑" href="{:U('edit?id='.$book['id'])}">编辑</a>
-							<a class="confirm ajax-get" title="删除" href="{:U('del?id='.$book['id'])}">删除</a>
+							<a title="编辑" href="{:U('edit?id='.$info['id'])}">编辑</a>
+							<a class="confirm ajax-get" title="删除" href="{:U('del?id='.$info['id'])}">删除</a>
 
 						</td>
 					</tr>

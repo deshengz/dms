@@ -3,41 +3,28 @@
 <block name="body">
 	<div class="main-title">
 		<h2>
-			{$map['id']?'编辑':'新增'}图书
+			{$info['id']?'编辑':'新增'}图书
 		</h2>
 	</div>
 
 	<form action="{:U()}" method="post" class="form-horizontal">
-		<input type="hidden" name="id" value="{$id}" />
 		<div class="form-item">
-			<label class="item-label">图书名称<span class="check-tips">（用于显示的文字）</span></label>
+			<label class="item-label">器材名称<span class="check-tips">（用于显示的文字）</span></label>
 			<div class="controls">
-				<input type="text" class="text input-large required" name="name" value="{$book.name|default=''}" placeholder="请输入图书名"  aria-required="true" aria-invalid="true" />
+				<input type="text" class="text input-large required" name="name" value="{$info.name|default=''}" placeholder="请输入器材名"  aria-required="true" aria-invalid="true" />
 			</div>
 		</div>
 		<div class="form-item">
-			<label class="item-label">图书编号<span class="check-tips">图书编码不能重复</span></label>
+			<label class="item-label">器材编号<span class="check-tips">器材编码不能重复</span></label>
 			<div class="controls">
-				<input type="text" class="text input-large" name="bsn" value="{$book.bsn|default=''}">
+				<input type="text" class="text input-large" name="esn" value="{$info.esn|default=''}">
 			</div>
 		</div>
-        <div class="form-item">
-            <label class="item-label">出版社<span class="check-tips"></span></label>
-            <div class="controls">
-                <input type="text" class="text input-large" name="press" value="{$book.press|default=''}">
-            </div>
-        </div>
 
-        <div class="form-item">
-            <label class="item-label">出版日期<span class="check-tips"></span></label>
-            <div class="controls">
-                <input type="text" class="text input-large" name="publication_date" value="{$book.publication_date|default=''}">
-            </div>
-        </div>
         <div class="form-item">
             <label class="item-label">库存<span class="check-tips"></span></label>
             <div class="controls">
-                <input type="text" class="text input-small" name="inventory" value="{$book.inventory|default='0'}">
+                <input type="text" class="text input-small" name="inventory" value="{$info.inventory|default='0'}">
             </div>
         </div>
 
@@ -45,22 +32,22 @@
             <label class="item-label">状态</label>
             <div class="controls">
                 <select name="status">
-				<option value="1" <eq name="book.status" value="1" >selected</eq>>启用</option>
-				<option value="0" <eq name="book.status" value="0" >selected</eq>>停用</option>
+				<option value="1" <eq name="info.status" value="1" >selected</eq>>启用</option>
+				<option value="0" <eq name="info.status" value="0" >selected</eq>>停用</option>
                 </select>
             </div>
         </div>
         <div class="thumb_image">
 
 
-                <img src="/Uploads/Picture/thumb_{$book.image|default='default.jpg'}" width="263" height="197" class="img_thumb"/>
+                <img src="/Uploads/Picture/thumb_{$info.image|default='default.jpg'}" width="263" height="197" class="img_thumb"/>
 
             <div> <input id="file_upload" name="file_upload" type="file" multiple="true" value="" /><span>图片规格：600*450</span></div>
             <input type="hidden" name="image" value="" id="image"/>
 
         </div>
 		<div class="form-item">
-			<input type="hidden" name="id" value="{$book.id|default=''}">
+			<input type="hidden" name="id" value="{$info.id|default=''}">
 			<button class="btn submit-btn" id="submit" type="submit" target-form="form-horizontal">确 定</button>
 			<button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
 		</div>
@@ -78,7 +65,7 @@
         var img = '';
         $('#file_upload').uploadify({
             'swf'      : '__STATIC__/uploadify/uploadify.swf',
-            'uploader' : '{:U("Book/upload",array("session_id"=>session_id()))}',   //上传的方法
+            'uploader' : '{:U("Equipment/upload",array("session_id"=>session_id()))}',   //上传的方法
             'buttonText' : ' 图片上传',
             'formData': { 'session': '<?php echo session_id();?>'},
             'onUploadSuccess' : function(file, data, response) {

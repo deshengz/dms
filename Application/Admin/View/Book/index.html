@@ -38,7 +38,7 @@
 						<td>{$book.name}</a></td>
 						<td>{$book.press}</td>
                         <td>{$book.publication_date}</td>
-                        <td>{$book.inventory}/{$book.total}</td>
+                        <td>{$book.inventory}/{$book['inventory']+$book['apply_num']}</td>
                         <td><eq name="book.status" value="1" >启用<else/>停用</eq></td>
 						<td>
 							<a title="编辑" href="{:U('edit?id='.$book['id'])}">编辑</a>
